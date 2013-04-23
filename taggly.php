@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * Taggly
@@ -11,8 +11,25 @@
  * @version				1.0.0
  * @last modfication	23/04/2013
  * @contact				raniellyferreira@rfs.net.br
- */
  
+ $configs = array(
+	'min_font' => 16, //Minimum limit for font size
+	'max_font' => 48, //Maximum limit for font size
+	'size_type' => 'px', //Type size for setting in the css tags
+	'full_tag_open' => '<div id="tag_cloud">', //Start of tag where will all the code
+	'full_tag_close' => '</div>', //End of tag
+	'item_tag_open' => '<span>', //Start tag for tags
+	'item_tag_close' => '</span>',//End of itens tag
+	'shuffle' => TRUE, //Random tags
+	'link_tag_class' => 'my_css_class', //Class for 
+	'links_target' => '_top', //Target of links tags
+	'find_match' => array(), //Insert here the names of the tags to be highlighted.
+	'match_class' => 'match_class' //Class for tags highlighted
+);
+
+ 
+ 
+ */
  
 class Taggly 
 {
@@ -80,7 +97,7 @@ class Taggly
 		foreach($data as $v)
 		{
 			
-			if( ! isset($v[1]) ) continue;
+			if( ! isset($v[1]) OR (bool) ! $v) continue;
 			
 			$html .= $this->item_tag_open;
 			$html .= '<a class="';
