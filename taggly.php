@@ -144,9 +144,9 @@ class Taggly
 				$html .= '</span>';
 			}
 			
-			$html .= '</a> ';
+			$html .= '</a>';
 			
-			$html .= $this->item_tag_close;
+			$html .= $this->item_tag_close.' ';
 		}
 		
 		$html .= $this->full_tag_close;
