@@ -21,7 +21,7 @@
 	'item_tag_open' => '<span>', //Start tag for tags
 	'item_tag_close' => '</span>',//End of itens tag
 	'shuffle' => TRUE, //Random tags
-	'link_tag_class' => 'my_css_class', //Class for 
+	'link_tag_class' => 'my_css_class', //Class for links tags
 	'links_target' => '_top', //Target of links tags
 	'find_match' => array(), //Insert here the names of the tags to be highlighted.
 	'match_class' => 'match_class' //Class for tags highlighted
