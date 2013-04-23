@@ -1,11 +1,11 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /**
  * Taggly
  *
  * This class generate tags cloud
  *
- * @category  		Library
+ * @category			Library
  * @author				Ranielly Ferreira
  * @based 				Taglly class of Derek Jones
  * @version				1.0.0
