@@ -8,8 +8,8 @@
  * @category			Library
  * @author				Ranielly Ferreira
  * @based 				Taglly class of Derek Jones
- * @version				1.0.0
- * @last modfication	23/04/2013
+ * @version				1.1.0
+ * @last modfication	24/04/2013
  * @contact				raniellyferreira@rfs.net.br
  
  $configs = array(
@@ -152,5 +152,29 @@ class Taggly
 		$html .= $this->full_tag_close;
 		
 		return $html;
+	}
+	
+	public function clean()
+	{
+		$configs = array(
+			'min_font' => 16,
+			'max_font' => 48,
+			'size_type' => 'px',
+			'full_tag_open' => '<div id="tag_cloud">',
+			'full_tag_close' => '</div>',
+			'item_tag_open' => '<span>',
+			'item_tag_close' => '</span>',
+			'shuffle' => TRUE, //Random tags
+			'link_tag_class' => 'my_css_class',
+			'links_target' => '_top',
+			'find_match' => array(),
+			'match_class' => 'match_class'
+		);
+		
+		$this->load($configs);
+		
+		$this->tags_content = array();
+		
+		return $this;
 	}
 }
