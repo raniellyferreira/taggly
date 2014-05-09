@@ -8,8 +8,8 @@
  * @category			Library
  * @author				Ranielly Ferreira
  * @based 				Taglly class of Derek Jones
- * @version				1.1.0
- * @last modfication	24/04/2013
+ * @version				1.2.1
+ * @last modfication	09/05/2014
  * @contact				raniellyferreira@rfs.net.br
  
  $configs = array(
@@ -33,20 +33,25 @@
  
 class Taggly 
 {
-	public $min_font 		= 16;
-    public $max_font 		= 48;
-	public $size_type		= 'px';
-    public $full_tag_open	= '<div id="tag_cloud">';
-    public $full_tag_close 	= '</div>';
-	public $item_tag_open	= '<span>';
-	public $item_tag_close	= '</span>';
-    public $shuffle 		= TRUE;
-    public $link_tag_class	= 'my_css_class';
-	public $links_target	= '_top';
-    public $find_match 		= array();
-    public $match_class 	= 'match_class';
+	public $min_font 			= 16;
+    public $max_font 			= 48;
+	public $size_type			= 'px';
+    public $full_tag_open		= '<div id="tag_cloud">';
+    public $full_tag_close 		= '</div>';
+	public $item_tag_open		= '<span>';
+	public $item_tag_close		= '</span>';
+    public $shuffle 			= TRUE;
+	public $shuffle_font_size	= 0;
+    public $link_tag_class		= 'my_css_class';
+	public $links_target		= '_top';
+    public $find_match 			= array();
+    public $match_class 		= 'match_class';
+	public $max_rating			= 0;
+	public $scale_precision		= TRUE;
+	public static $ignored_words= array('?','of','the','is','off','you','them','then','at','with','i','it','we','de','e');
 	
-	private $tags_content 	= array();
+	private $tags_content 		= array();
+	private $mid_rating			= 0;
 	
 	
     function __construct($array = array())
@@ -72,6 +77,24 @@ class Taggly
 		return $this;
 	}
 	
+	public function add_tags($tags)
+	{
+		if(is_scalar($tags)) return FALSE;
+		
+		if($this->_check_type_array($tags))
+		{
+			foreach($tags as $tag)
+			{
+				if(is_array($tag))
+				{
+					$this->add_tag($tag);
+				}
+			}
+		} else $this->add_tag($tags);
+		
+		return $this;
+	}
+	
 	public function add_tag($tag)
 	{
 		if((bool) ! $tag OR ! is_array($tag)) return FALSE;
@@ -89,6 +112,8 @@ class Taggly
 		
 		if((bool) ! $data) return FALSE;
 		
+		$this->_get_max_rating();
+		
 		if($this->shuffle) shuffle($data);
 		
 		$html = NULL;
@@ -104,18 +129,12 @@ class Taggly
 			$html .= $this->link_tag_class;
 			$html .= '" style="font-size: ';
 			
-			if($v[0] <= $this->max_font AND $v[0] >= $this->min_font)
+			if($this->shuffle_font_size > 0 AND $v[0] < $this->shuffle_font_size)
 			{
-				$html .= $v[0];
-			}else
+				$html .= rand($this->min_font,$this->max_font);
+			} else
 			{
-				if($v[0] > $this->max_font)
-				{
-					$html .= $this->max_font;
-				} else
-				{
-					$html .= $this->min_font;
-				}
+				$html .= $this->_calc_rating($v[0]);
 			}
 			
 			$html .= $this->size_type;
@@ -152,6 +171,50 @@ class Taggly
 		$html .= $this->full_tag_close;
 		
 		return $html;
+	}
+	
+	private function _get_max_rating($data = array())
+	{
+		$data = ((bool) $data) ? $data : $this->tags_content;
+		
+		if(empty($data)) return FALSE;
+		
+		foreach($this->tags_content as $tag)
+		{
+			if(isset($tag[0]) AND $tag[0] > $this->max_rating)
+			{
+				$this->max_rating = $tag[0];
+			}
+		}
+		
+		if($this->max_rating == 0) return false;
+		
+		if($this->scale_precision)
+		$this->mid_rating = $this->max_font / $this->max_rating;
+		else
+		$this->mid_rating = $this->max_rating / $this->max_font;
+	}
+	
+	private function _calc_rating($rat)
+	{
+		$res = ceil($rat * $this->mid_rating);
+		if($res >= $this->min_font AND $res <= $this->max_font)
+		return $res;
+		elseif($res < $this->min_font)
+		return $this->min_font;
+		else
+		return $this->max_font;
+	}
+	
+	private function _check_type_array($array)
+	{
+		foreach($array as $row)
+		{
+			if(!is_scalar($row))
+			return TRUE;
+			else
+			return FALSE;
+		}
 	}
 	
 	public function clean()
